@@ -13,13 +13,14 @@
           <h3 class="box-title text-capitalize">{{$dir->dir}}</h3>
               
           <div class="box-tools pull-right">
-              <button type="button" class="btn btn-sm btn-success"  data-toggle="modal" data-target="#modal-capture"><i class="fa fa-image"></i>
-               Capture Image</button>
-              <button type="button" class="btn btn-sm btn-warning"  data-toggle="modal" data-target="#modal-note">
-              <i class="fa fa-file-text"></i> Create Note</button>
-           
+              <button type="button" class="btn btn-sm btn-info"  data-toggle="modal" data-target="#modal-capture">
+              Capture Image</button>
+              <button type="button" class="btn btn-sm btn-info"  data-toggle="modal" data-target="#modal-note">
+              Create Note</button>
+            <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+                    title="Collapse"></button>
                 <button type="button" class="btn btn-sm btn-info"  data-toggle="modal" data-target="#modal-info">
-               <i class="fa fa-folder"></i> Create Directory</button>
+              Create Directory</button>
               <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
                     title="Collapse">
               <i class="fa fa-minus"></i></button>
@@ -41,9 +42,8 @@
                     @foreach($subDir as $dirs)
                     
                     <div class="col-md-1">
-                        <a href="{{route('view-adir',['id'=>base64_encode($dirs->id)])}}">
                         <i class="fa fa-folder-open" style="color: {{$dirs->color}}; font-size:55pt; "></i>
-                          {{$dirs->dir}}</a>
+                          <a href="{{route('view-adir',['id'=>base64_encode($dirs->id)])}}">{{$dirs->dir}}</a>
                       </div>
                     
                       <!-- /.col -->
@@ -57,27 +57,19 @@
                  <div class="col-md-12">
                       <h2 class="page-header">
                             <i class="fa fa-file-text-o"></i> File
-                            
+                            <small class="pull-right"></small>
                           </h2>
-                     
-                     <small class="pull-right"></small>
-                            <form role="form"  method="post" action="{{route('file-pdf-trainer')}}" enctype="multipart/form-data">
-                    {{ csrf_field() }}
-                    <input type="hidden" value="{{$dir->id}}" name="d_id">
-                            <button type="submit" class="btn btn-sm btn-success" >
-                              <i class="fa fa-download"></i> Download all file as pdf</button>
-                            </form>
                      <section class="container-fluid" style="margin-top: 20pt;">
                  @foreach($dir->material as $mat)
                     
                     <div class="col-md-1">
                         @if($mat->img==NULL)
-                         <a href="{{route('view-afile',['id'=>base64_encode($mat->id)])}}">
+                        
                         <i class="fa fa-file-text-o" style=" font-size:55pt;"></i>
-                        {{$mat->title}}
+                       <a href="{{route('view-adir',['id'=>base64_encode($mat->id)])}}">{{$mat->title}}
                         </a>
                          @else
-                        <a href="{{route('view-afile',['id'=>base64_encode($mat->id)])}}"><img src="{{ asset('public/img/dir/'.$mat->img) }}" height="90" ></a>{{$mat->title}}
+                        <a href="{{route('view-adir',['id'=>base64_encode($mat->id)])}}"><img src="{{ asset('public/img/dir/'.$mat->img) }}" height="90" ></a>{{$mat->title}}
                         @endif
                         <!-- /.info-box-content -->
                       </div>
@@ -104,7 +96,7 @@
     <!-- /.content -->
 	</div>
 
-     <div class="modal modal-default fade" id="modal-note">
+     <div class="modal modal-info fade" id="modal-note">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
@@ -136,8 +128,8 @@
                    
               </div>
               <div class="modal-footer">
-                  <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-default">Save</button>
+                  <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-outline">Save</button>
               </div>
                  </form>
             </div>
@@ -147,7 +139,7 @@
         </div>
         <!-- /.modal -->
         
-            <div class="modal modal-default fade" id="modal-capture">
+            <div class="modal modal-info fade" id="modal-capture">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
@@ -169,14 +161,13 @@
                         <input type="file" class="btn btn-sm btn-info" capture="environment" accept="image/*" id="cameraInput" name="file" style="float: left; margin-right: 5px;">
                       </div>
                      
-                        <img id="blah" src="#" alt="Capture pic" width='200' style="display: none;" />                     
+                      <img id="blah" src="#" alt="Capture pic" width='200' />                     
                       <script>                     
                           function readURL(input) {     
                               if (input.files && input.files[0]) {         
                                   var reader = new FileReader();          
                                   reader.onload = function (e) {             
-                                      $('#blah').attr('src', e.target.result); 
-                                      $('#blah').css('display','block')
+                                      $('#blah').attr('src', e.target.result);         
                                   }          
                                   reader.readAsDataURL(input.files[0]);     
                               } }  
@@ -190,8 +181,8 @@
                    
               </div>
               <div class="modal-footer">
-                  <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-default">Save</button>
+                  <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-outline">Save</button>
               </div>
                  </form>
             </div>
@@ -201,7 +192,7 @@
         </div>
         
         
-        <div class="modal modal-default fade" id="modal-info">
+        <div class="modal modal-info fade" id="modal-info">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
@@ -233,8 +224,8 @@
                    
               </div>
               <div class="modal-footer">
-                  <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-default">Save</button>
+                  <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-outline">Save</button>
               </div>
                  </form>
             </div>

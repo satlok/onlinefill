@@ -10,6 +10,8 @@ use App\User;
 use App\model\Board;
 use App\model\Directory;
 use App\model\Material;
+use Mail;
+use PDF;
 
 class BoardController extends Controller
 {
@@ -96,5 +98,60 @@ class BoardController extends Controller
         }
         Material::create($r);
         return back();
+    }
+
+    //////////////////////////////////////////////////
+     public function view_file($id){
+        $id=base64_decode($id);
+       $file= Material::where('id',$id)->first();
+      // dd($file);
+        return view('trainer.board.view_file',compact('file'));
+    } 
+    
+    public function create_mail(Request $req){
+          $req=$req->all();
+          $data = Material::findOrFail($req['material_id']);
+          $a=str_replace(array( '[', ']','"'), '', $req['email']);
+          $a=explode(",",$a);
+            Mail::send('emails.pic', ['data' => $data], function ($m) use ($data,$a) {
+            $m->from('info@onlinefill.in', 'online fill');
+            if($data->img != null){
+                $pathToFile=asset('public/img/dir/').'/'.$data->img;
+                $m->attach($pathToFile);
+            }
+            else{
+                PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+            // pass view file
+               $pdf = PDF::loadView('pdf.pdffile', compact('data'));
+               $m->attachData($pdf->output(),"matterial.pdf");
+                //$m->attachData($data->matter, "matterial.pdf");
+            }
+            //$m->subject('Confidential Data');
+            $m->to($a)->subject('Your Friend share a file');
+        });
+         return back();
+         
+    } 
+    
+    public function inviteInBoard(Request $req){
+          $req=$req->all();
+          $data = Board::findOrFail($req['board_id']);
+          $a=str_replace(array( '[', ']','"'), '', $req['email']);
+          $a=explode(",",$a);
+            Mail::send('emails.file', ['board' => $data,'user'=>Auth::user()], function ($m) use ($data,$a) {
+            $m->from('info@onlinefill.in', 'online fill');
+            $m->to($a)->subject('Your Friend share a file');
+        });
+         
+         return back();
+    }
+     public function trainerFilePdf(Request $req){
+          $req=$req->all();
+          $datas = Material::where('directory_id',$req['d_id'])->get();
+         PDF::setOptions(['dpi' => 150, 'defaultFont' => 'sans-serif']);
+            // pass view file
+               $pdf = PDF::loadView('pdf.pdffileall', compact('datas'));
+               return $pdf->download('pdfview.pdf');
+         return back();
     }
 }

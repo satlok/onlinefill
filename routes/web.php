@@ -107,5 +107,10 @@ Route::get('/view-aboard/{id}', 'trainer\BoardController@view')->name('view-aboa
 Route::post('/create-adirectory', 'trainer\BoardController@create_dir')->name('create-adir');
 Route::post('/create-amatter', 'trainer\BoardController@create_amatter')->name('create-amatter');
 Route::get('/view-adirectory/{id}', 'trainer\BoardController@view_dir')->name('view-adir');
+
+Route::get('/view-afile/{id}', 'trainer\BoardController@view_file')->name('view-afile');
+Route::post('/create_amail', 'trainer\BoardController@create_mail')->name('create-amail');
+Route::post('/invite-in-aboard', 'trainer\BoardController@inviteInBoard')->name('invite-in-aboard');
+Route::post('/file-pdf-trainer', 'trainer\BoardController@trainerFilePdf')->name('file-pdf-trainer');
 });
 //-------------------------\trainer/-----------------------------//
